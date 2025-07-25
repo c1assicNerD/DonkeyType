@@ -1,9 +1,6 @@
 document.fonts.ready.then(() => {
     // Your code to measure and set border height
-    typeArea.style.height = (textchild.firstChild.firstChild.getBoundingClientRect().height) * 3 + 'px';
-
     execGame();
-
 });
 let radioListenerInitialized = false;
 const customizeChoice = {
@@ -413,4 +410,3 @@ function hideButtons() {
     modifiedButtons[2].textContent = "";
     modifiedButtons[3].textContent = "";
 }
-

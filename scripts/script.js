@@ -211,7 +211,8 @@ function playGame(game_words) {
 
     textchild.classList.add('text');
     typeArea.appendChild(textchild);
-
+    //calculate height of div based on character height
+    typeArea.style.height = (textchild.firstChild.firstChild.getBoundingClientRect().height) * 3 + 'px';
 
 
 
