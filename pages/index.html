@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>donkeyType</title>
+    <link rel="icon" href="../assets/donkey-icon.svg" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/index.css">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <script src="../scripts/script.js" defer></script>
+    
+    <script src="../scripts/timer.js" defer></script>
+   
+    
+</head>
+<body>
+    <div class="body">
+    <div>
+        <header>
+        <nav>
+            <div>
+                <li  class="icon">
+                    <div class="donkey">donkey sleep</div>
+                    <a href="#">
+                        <div >
+                            DonkeyTYPE
+                        </div>
+                    </a>
+                </li>
+               
+            </div>
+            <div>
+                
+                <li>
+                    <a href="#">
+                      <i class="fa fa-user" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                      <i class="fa fa-bell" aria-hidden="true"></i>
+                    </a>
+                </li>
+                 <li>
+                    <a href="#">
+                        <i class="fa fa-info" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li>
+                    <a  class="theme">
+                        <i  aria-hidden="true"></i>
+                        
+                    </a>
+                </li>
+            </div>
+        </nav>
+        </header>
+    <div class="modes">
+    <div class="choices">
+        <button>
+            <i class="fa fa-clock-o" aria-hidden="true"></i>
+            <span>time</span>
+        </button>
+        <button>
+            <i class="fa fa-font" aria-hidden="true"></i>
+            <span>words</span>
+        </button>
+        <button>
+            <i class="fa fa-quote-left" aria-hidden="true"></i>
+            <span>quote</span>
+        </button>
+        <button>
+            <i class="fa fa-wrench" aria-hidden="true"></i>
+            <span>customize</span>
+        </button>
+    </div>
+    <div></div>
+    <div class="button">
+        <button>15</button>
+        <button>30</button>
+        <button>60</button>
+        <button>120</button>
+    </div>
+    </div>
+    <div class="timer" >
+        <span></span>
+    </div>
+    <div class="container">
+
+        <div class="type-area"></div>
+    </div>
+    <div class="retry">
+        <button>
+            <i class="fa fa-repeat" aria-hidden="true"></i>
+        </button>
+    </div>
+    </div>
+    <footer>
+        <div class="shortcutColor">Tab</div>
+        <div>+</div>
+        <div class="shortcutColor">Enter</div>
+        <div>-</div>
+        <div>Restart Test</div>
+    </footer>
+    </div>
+    
+    <dialog id="favDialog">
+        <form action="">
+            
+            <div>Choose mode</div>
+            <div class="t radio">
+                <div>
+                    <input type="radio" name="mode" id="time" value="time"   checked>
+                    <label for="time">Time</label>
+                </div>
+                <div>
+                    <label for="timeip">number of seconds :</label>
+                    <input type="number" id="timeip" class="disable" value="30" >
+                </div>
+            </div>
+            <div class="w radio">
+                <div>
+                    <input type="radio" name="mode" id="word" value="word" >
+                    <label for="word">Word</label>
+                </div>
+                <div>
+                    <label for="wordip">number of words :</label>
+                    <input type="number"id="wordip" class="disable" value="25" >
+                </div>
+            </div>
+            <div class="c radio">
+                <div>
+                    <input type="radio" name="mode" id="custom" value="custom" >
+                    <label for="custom">Custom</label>
+                </div>
+                <div >
+                    <label for="textarea" class="cChild">custom paragraph :</label>
+                    <textarea name="textArea" id="textarea" class="cChild disable" spellcheck="false" >It was the best of times, it was the blurst of times!</textarea>
+                </div>
+            </div>
+            <div>
+                <button>Confirm</button>
+            </div>
+        </form>     
+    </dialog>
+    
+    
+</body>
+</html>

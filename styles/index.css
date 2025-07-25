@@ -1,0 +1,316 @@
+:root{
+    
+    font-family:"Roboto Mono" ,sans-serif;
+   /* font-family:"Luckiest Guy",cursive;*/
+    font-display: optional; /* delays font swap, prevents layout shift */
+}
+:root.light{
+    --correct-color: rgba(29, 142, 66, 1);
+    --wrong-color:rgba(255, 102, 49, 1);
+    --background-color: #f5e7d5;
+    --icon-color:#a0978b;
+    --timer-bg: #e9dccc;
+    --black-shade:rgb(34,34,34);
+    --color:rgb(34,34,34);
+    --shortcut-bg: rgb(34,34,34);
+    --modes-color:#f5e7d5;
+    --donkey-sleep:rgb(115, 115, 115);
+    --caret-color:#FEF24E;
+    --modes-bg:rgba(255, 102, 49, 1);
+    --hover-modes:rgba(29, 142, 66, 1);
+    --retry-color:rgb(34,34,34);
+    background-color: var(--background-color);
+    color: var(--black-shade);
+    transition-duration: 0.25s;
+}
+:root.dark{
+    --black-shade:#969598;
+    --background-color:rgb(0, 0, 0);
+    --correct-color:#969598;
+    --caret-color:#2d2c2d;
+    --wrong-color:#A21E3F;
+    --modes-bg:#1e1d1e;
+    --icon-color:#b5b4b6;
+    --timer-bg: #1e1d1e;
+    --color:#F0F6FC;
+    --hover-modes:#F0F6FC;
+    --shortcut-bg:#b5b4b6;
+    --retry-color:#969598;;
+    background-color: var(--background-color);
+    color: var(--black-shade);
+    transition-duration: 0.25s;
+    
+}
+.wordFlex{
+    display: flex !important;
+}
+span{
+    white-space: pre;
+}
+.blockPadding {
+    
+    padding: 5px 0;
+}
+body{
+    margin: 0;;
+    height: 100vh;
+}
+.body{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.body >div{
+    width: 100%;
+}
+.type-area div{
+    display: inline;
+    font-size: 32px;
+}
+.container{
+    display: flex;
+    justify-content: center;
+    
+    margin-bottom: 1rem;
+
+}
+.type-area{
+    color:var(--color); 
+    width:80%;
+    height: 7rem;
+
+}
+.text{
+    margin-left:2rem;
+}
+.type-area{
+    overflow: hidden;
+}
+.timer{
+    
+    width: 80%;
+    
+    margin: 0 auto;
+    
+    margin-bottom: 0.4rem;
+    font-size: 32px;
+    
+}
+.timer span{
+    font-family: "Luckiest Guy",cursive;
+    margin-left: 2rem;
+    background-color: var(--timer-bg);
+}
+.canvas{
+    padding:50px;
+}
+.modes{
+    font-family: "Luckiest Guy ",cursive;
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    margin: 0 auto;
+    background: var(--modes-bg);
+    border: 2px solid var(--black-shade);
+    color:var(--modes-color);
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+.choices,.button, .modes div:nth-child(2){
+    display: flex;
+    flex:auto;
+}
+.choices button,.button button{
+    font-family: inherit;
+    flex:auto;
+    background:inherit;
+    color: var(--backgound-color);
+    border: none;
+    padding:8px;
+    transition-duration:0.45s;
+    transition-property: color;
+}
+button:hover{
+    color: var(--hover-modes)
+}
+.caret{
+    transition-duration: 115ms ;
+    transition-property:background-color,text-decoration-color,text-decoration;
+}
+li{
+    list-style-type: none;
+    align-content: center;
+}
+a{
+    color:var(--backgound-color);
+    text-decoration: none;
+}
+
+nav{
+    display: flex;
+    width: 80%;
+    margin: 0 auto;
+
+}
+header{
+    background-color:var(--black-shade) ;
+    margin-bottom: 3rem;
+    color: var(--background-color)
+}
+nav >div{
+    display: flex;
+    flex:auto;
+    gap:50px;
+    justify-content: flex-start;
+   
+}
+nav>div:nth-child(2){
+    justify-content: flex-end;
+}
+.donkey{
+    position: absolute;
+    font-size:13px;
+    color:var(--donkey-sleep);
+    left: 7px;
+    top:4px
+
+}
+nav>div>li>a{
+    font-size: 24px;
+}
+.icon>a{
+    font-size:48px;
+}
+.icon{
+    padding: 8px 0;
+    font-family: "Luckiest Guy",cursive;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 48px;
+    position: relative;
+}
+.retry>button{
+    color:var(--retry-color);
+    display: inline;
+    padding:1rem 2rem;
+    font-size: 24px;
+    background-color: var(--backgound-color);
+    border:none;
+   
+}
+ button:focus{
+    
+    outline: 2px solid var(--black-shade);
+    border-radius: 4px;
+}
+.retry{
+    text-align: center;
+}
+.modeSelected{
+    color: var(--hover-modes) !important
+}
+.invisible{
+    visibility:hidden;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    gap:1.5rem;
+}
+.t,.c,.w{
+    display: flex;
+    gap:2rem;
+}
+.c > div:nth-child(2){
+    flex:auto;
+}
+.cChild{
+    display: block;
+    width: 100%;
+    
+}
+textarea{
+    height: 5rem;
+    font-family: "Luckiest Guy",cursive;
+    text-decoration: none;
+    margin-top: 0.5rem;
+}
+dialog{
+    font-family: "Luckiest Guy",cursive;
+}
+input{
+     font-family: "Luckiest Guy",cursive;
+}
+form >div:last-child{
+    text-align: end;
+}
+dialog button{
+    font-family: "Luckiest Guy",cursive;;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition-duration: 0.4s;
+    transition-property: background-color;
+}
+dialog button:hover{
+    background-color: rgb(187, 182, 182);
+    font-weight: bold;
+}
+.iconVisible{
+    color:var(--icon-color);
+    visibility: visible;
+}
+.noCursor{
+    cursor: none;
+}
+footer{
+    display: flex;
+    justify-content: center;
+    gap:1rem;
+    font-family: "Luckiest Guy",cursive;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+.shortcutColor{
+    background-color: var(--shortcut-bg);
+    color:var(--background-color);
+    padding:2px 8px
+}
+dialog::backdrop {
+  backdrop-filter: blur(5px);
+  /*background-color: rgba(0, 0, 0, 0.3);*/
+}
+/*js exclusive dynamic classes*/
+.backgroundCaret{
+    background-color:var(--caret-color);
+}
+.textDecoration{
+    text-decoration: underline;
+}
+.textDecorationColor{
+    text-decoration-color: var(--caret-color);
+}
+.backgroundTextDecoration{
+    text-decoration-color: var(--background-color);
+}
+
+.backgroundColor{
+    background-color: var(--background-color);
+}
+.correctColor{
+    color:var(--correct-color)
+}
+.wrongColor{
+    color:var(--wrong-color)
+}
+.wrongTextDecoration{
+    text-decoration-color: var(--wrong-color);
+}
+.transitionDuration{
+    transition-duration:250ms;
+    transition-property: var(--correct-color),var(--backgound-color),var(--wrong-color);
+}
+.transitionZero{
+    transition-duration: 0ms;
+}

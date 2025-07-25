@@ -1,0 +1,87 @@
+:root{
+    font-family: "Luckiest Guy ",cursive;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.chart{
+    display: flex;
+}
+.canvas{
+    padding: 5px;
+    
+}
+.chart >div{
+    flex:auto
+}
+.title{
+    text-align: center;
+    font-size:32px;
+    color:var(--wrong-color);
+}
+.details{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+}
+.details >div{
+   flex: auto;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
+.value{
+    text-align: center;
+    font-size:48px;
+    color:var(--correct-color)
+}
+.filler{
+    display: flex;
+    gap:12rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+.fillerTitle{
+    color:var(--wrong-color);
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+.fillerValue{
+    font-size: 32px;
+    color:var(--correct-color)
+}
+/*.card{
+    border:1px solid #d5c9b9
+}*/
+.nextGame{
+    margin-top: 16px;
+    text-align: center;
+    padding:1rem;
+}
+.nextGame button{
+    padding:1rem 2rem;
+    margin: 0 2rem;
+    color:var(--retry-color); 
+    font-size: 24px;
+    background-color: var(--backgound-color);
+    border:none;
+}
+.nextGame button:focus{
+    outline: 2px solid var(--retry-color);
+}
+button a{color:inherit}
+
+.acc{
+    margin-left: 15%;
+}
+canvas{
+    height:30vh;
+}
+footer{
+    
+    padding:8px;
+}

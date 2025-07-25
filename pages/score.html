@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>score</title>
+    <link rel="icon" href="../assets/donkey-icon.svg" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../styles/chart.css">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div>
+                <li  class="icon">
+                    <div class="donkey">donkey sleep</div>
+                    <a>
+                        <div >
+                            DonkeyTYPE
+                        </div>
+                    </a>
+                </li>
+               
+            </div>
+            <div>
+                
+                <li>
+                    <a>
+                      <i class="fa fa-user" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li>
+                    <a>
+                      <i class="fa fa-bell" aria-hidden="true"></i>
+                    </a>
+                </li>
+                 <li>
+                    <a>
+                        <i class="fa fa-info" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li>
+                    <a  class="theme">
+                        <i class="fa fa-sun-o" aria-hidden="true"></i>
+                    </a>
+                </li>
+            </div>
+        </nav>
+    </header>
+    <div >
+        <div class="chart">
+            <div class="details">
+                <div class="">
+                    <div class="card">
+                    <div class="title">wpm</div>
+                    <div class="wpm value"></div>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="card">
+                    <div class="title">acc</div>
+                    <div class="acc value"></div></div>
+                </div>
+            </div>
+            <div class="canvas" >
+                <canvas id="myChart" style="max-height: 45vh;max-width: 900px;"></canvas>
+            </div>
+        </div>
+        <div class="filler">
+            <div class="characters card">
+                <div class="fillerTitle">characters-typed</div>
+                <div class="fillerValue fillerChars"></div>
+            </div>
+            <div class="time card">
+                <div class="fillerTitle ">time</div>
+                <div class="fillerValue fillerTime"></div>
+            </div>
+        </div>
+        <div class="nextGame">
+            <button onclick="handleRepeat()" class="next">
+            <i class="fa fa-chevron-right" aria-hidden="true" tabindex="-1"></i></button>
+            <button onclick="handleNext()" class="repeat">
+            <i class="fa fa-refresh" aria-hidden="true" tabindex="-1"></i></button>
+        </div>
+    </div>
+    <footer>
+        <div class="shortcutColor">Tab</div>
+        <div>+</div>
+        <div class="shortcutColor">Enter</div>
+        <div>-</div>
+        <div>Next test</div>
+    </footer>
+    
+    <script>
+        if(!localStorage.getItem("theme")){
+            document.documentElement.className = 'light';
+            localStorage.setItem("theme","light");
+        }
+        else{
+            let theme = localStorage.getItem("theme");
+            document.documentElement.className = theme;
+        }
+        const repeat= document.querySelector(".repeat")
+        const next= document.querySelector(".next")
+        const acc = document.querySelector('.acc');
+        const fillerTime = document.querySelector('.fillerTime')
+        const fillerChars = document.querySelector('.fillerChars');
+        let correctColor = getComputedStyle(document.documentElement).getPropertyValue("--correct-color")
+        let wrongColor = getComputedStyle(document.documentElement).getPropertyValue("--wrong-color")
+        const theme = document.querySelector(".theme");
+        let myChart;
+        theme.addEventListener('click',switchTheme);
+        function switchTheme(e){
+
+            console.log(document.documentElement.getAttribute('class'));
+            const icon = theme.firstElementChild;
+            if(document.documentElement.getAttribute('class')=='light'){
+                icon.className = "fa fa-moon-o";
+                document.documentElement.className = "dark";
+                changeChartColor("dark");
+                localStorage.setItem("theme","dark")
+            }
+            else{
+                document.documentElement.className = "light";
+                icon.className = "fa fa-sun-o";
+                changeChartColor("light");
+                localStorage.setItem("theme","light");
+            }
+        }
+        
+        window.onload = function(){
+            
+            const wpm = document.querySelector(".wpm")
+            let url = window.location.href;
+            const params = url.split('?')[1].split('&')
+            let max = +params[0].split('=')[1];
+            let accuracy = params[3].split('=')[1];
+            let xValues = decodeURIComponent(params[1].split('=')[1]).split(',')
+            let yValues = decodeURIComponent(params[2].split('=')[1]).split(',');
+            let time  = params[5].split('=')[1];
+            let chars = params[4].split('=')[1];
+            xValues = xValues.map(x=>+x); 
+            yValues = yValues.map(y=>+y); 
+            console.log(yValues);
+
+            
+            const canvas= document.querySelector('canvas');
+            myChart = new Chart("myChart",{
+                    type:"line",
+                    data: {
+                        labels:xValues,
+                        datasets: [{
+                            data: yValues,
+                            backgroundColor:wrongColor,
+                            borderColor: wrongColor,
+                            fill:false,
+                            tension:0.25,
+                            label: "wpm",
+                        }],
+                        clip: {top:40,left:false,right:false,bottom:false},
+                    
+                    },
+
+                    options:{
+                        responsive : true,
+                        clip:false,
+                        scales:{
+                            x:{
+                                display:true,
+                                title:{
+                                    display:true,
+                                    text:"Time",
+                                    
+                                    font:{
+                                        family: '"Luckiest Guy ",cursive',
+                                        style:'normal',
+                                        weight:'bold',
+                                        size:16,
+                                        lineHeight:1.2
+                                    },
+                                    //padding:{top:20,bottom:0,left:0,right:0}
+                                },
+                                min:1,
+                                ticks: {
+                                    maxTicksLimit: 15,
+
+                                }
+                            
+                            },
+                            y:{
+                                display: true,
+                                title: {
+                                  display: true,
+                                  text: 'words per minute',
+                                  
+                                  font: {
+                                    family: '"Luckiest Guy ",cursive',
+                                    size: 15,
+                                    style: 'normal',
+                                    weight:'bold',
+                                    lineHeight: 1.2
+                                  },
+                                  //padding: {top: 30, left: 0, right: 0, bottom: 0}
+                                },
+                                min:0,
+                                max:max,
+
+                                ticks: {
+                                    maxTicksLimit: 5,
+
+                                }
+                            },
+
+                        
+                        },
+                        plugins: {
+                            legend: {
+                              display:false,
+                            }
+                        },
+                        layout:{
+                            padding:20
+                        }
+                    
+                    }
+                
+            });
+        wpm.textContent = yValues.at(-1);
+        
+        acc.textContent = accuracy;
+        fillerTime.textContent = time+"s"
+        fillerChars.textContent = chars
+        }
+        let tabIndexNext= true
+        let tabIndexRepeat = true;
+        document.addEventListener('keydown',(e)=>{
+            if(e.key=="Tab" && tabIndexNext){
+                e.preventDefault();
+                next.focus();
+                tabIndexNext=false;
+            }
+            else if(e.key=="Tab"&& tabIndexRepeat){
+                e.preventDefault();
+                repeat.focus();
+                tabIndexRepeat = false;
+            }
+        })
+        function handleNext(){
+            window.location.href = './index.html'
+        }
+        function handleRepeat(){
+            //repeat logic racing with past self
+            window.location.href = './index.html'
+        }
+        function changeChartColor(){
+            let wrongColor = getComputedStyle(document.documentElement).getPropertyValue("--wrong-color");
+            
+            myChart.data.datasets[0].backgroundColor = wrongColor;
+            myChart.data.datasets[0].borderColor = wrongColor;   
+            myChart.update();
+        }
+    </script>
+</body>
+</html>
