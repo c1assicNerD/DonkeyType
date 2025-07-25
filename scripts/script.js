@@ -558,6 +558,8 @@ async function execGame() {
         //customize - 3 cases, preserve word/time, do default on custom para
         localRef1 = document.querySelector(".choices>button:nth-child(4)")
         localRef1.classList.add("modeSelected");
+        localRef2 = document.querySelector(`.button>button:nth-child(2)`);
+        localRef2.classList.add("modeSelected");
         hideButtons();
         customGame();
     }
