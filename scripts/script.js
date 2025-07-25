@@ -1,8 +1,8 @@
-if(!localStorage.getItem("theme")){
+if (!localStorage.getItem("theme")) {
     document.documentElement.className = 'light';
-    localStorage.setItem("theme","light");
+    localStorage.setItem("theme", "light");
 }
-else{
+else {
     let theme = localStorage.getItem("theme");
     document.documentElement.className = theme;
 }
@@ -25,380 +25,362 @@ const yValues = [];
 let rememberChoice;
 let quoteFlag = false;
 //get the css variable
-let maxWordsInitialized=false;
+let maxWordsInitialized = false;
 
 let wpm_obj = {
-    correctCharacters :0,
-    wrongCharacters:0,
-    wpm_array:[],
-    wordCount:0,
-    incorrectTyped :0,
+    correctCharacters: 0,
+    wrongCharacters: 0,
+    wpm_array: [],
+    wordCount: 0,
+    incorrectTyped: 0,
 }
 let headerInvisible = false;
 let clear;
 let handlerInitialized = false;
-let flag  = false;
-let disp_str=""
+let flag = false;
+let disp_str = ""
 let array = str.split(" ");
 let test_words = []
-let prevY=""
+let prevY = ""
 let currY = ""
-let flip = false; 
+let flip = false;
 let scrolll = true;
-let string_pointer =0;
-let user_str=""
+let string_pointer = 0;
+let user_str = ""
 let hook = {
-    divhook:1,
-    spanhook:1,
+    divhook: 1,
+    spanhook: 1,
 }
 
-let state={
-    key:"",
-    curr_div:"",
+let state = {
+    key: "",
+    curr_div: "",
 
 }
-let result=0;
+let result = 0;
 let word_init = false;
-let msStart=0;
-let msEnd =0;
-let max =0;
+let msStart = 0;
+let msEnd = 0;
+let max = 0;
 let time = 0;
-let wrong=0;
+let wrong = 0;
 let tabflag = true;
 let counter = 30;
 let accuracy;
-let prevWordCount=0;
-let maxWords=200;
+let prevWordCount = 0;
+let maxWords = 200;
 let toggle = false;
 let modeType = "time"
 let game_wordss;
-let record ={};
+let record = {};
 let keyNextTemp;
-let keyPrev,keyPrevPrev;
-let localRef1,localRef2;
+let keyPrev, keyPrevPrev;
+let localRef1, localRef2;
 let spanHeight;
 
 const theme = document.querySelector(".theme");
 const iconTheme = theme.firstElementChild;
 
-iconTheme.className = (document.documentElement.getAttribute('class')=='light')?"fa fa-sun-o":"fa fa-moon-o"
-theme.addEventListener('click',switchTheme);
+iconTheme.className = (document.documentElement.getAttribute('class') == 'light') ? "fa fa-sun-o" : "fa fa-moon-o"
+theme.addEventListener('click', switchTheme);
 
-function switchTheme(e){
-    
-    console.log(document.documentElement.getAttribute('class'));
-    if(document.documentElement.getAttribute('class')=='light'){
+function switchTheme(e) {
+
+
+    if (document.documentElement.getAttribute('class') == 'light') {
         iconTheme.className = "fa fa-moon-o";
         document.documentElement.className = "dark";
-        localStorage.setItem("theme","dark");
+        localStorage.setItem("theme", "dark");
     }
-    else{
+    else {
         document.documentElement.className = "light";
         iconTheme.className = "fa fa-sun-o";
-        localStorage.setItem("theme","light");
+        localStorage.setItem("theme", "light");
     }
 }
 
 
-function resetState(){
+function resetState() {
     wpm_obj = {
-        correctCharacters :0,
-        wrongCharacters:0,
-        wpm_array:[],
-        wordCount:0,
-        incorrectTyped:0,
+        correctCharacters: 0,
+        wrongCharacters: 0,
+        wpm_array: [],
+        wordCount: 0,
+        incorrectTyped: 0,
     }
-    flag  = false;
-    disp_str=""
+    flag = false;
+    disp_str = ""
     array = str.split(" ");
-    test_words.length=0
-    prevY=""
+    test_words.length = 0
+    prevY = ""
     currY = ""
-    flip = false; 
+    flip = false;
     scrolll = 0;
-    string_pointer =0;
-    user_str=""
+    string_pointer = 0;
+    user_str = ""
     hook = {
-        divhook:1,
-        spanhook:1,
+        divhook: 1,
+        spanhook: 1,
     }
 
-    state={
-        key:"",
-        curr_div:"",
+    state = {
+        key: "",
+        curr_div: "",
 
     }
-    wrong=0;
+    wrong = 0;
     tabflag = true;
-    textchild.textContent="";
+    textchild.textContent = "";
     counter = rememberChoice;
-    timer.textContent = (maxWordsInitialized)?`${wpm_obj.wordCount}/${maxWords}`:counter;
-    timer.classList.add('invisible')      
-    result =0;
-    max  = 0;
-    time=0;
+    timer.textContent = (maxWordsInitialized) ? `${wpm_obj.wordCount}/${maxWords}` : counter;
+    timer.classList.add('invisible')
+    result = 0;
+    max = 0;
+    time = 0;
     keyPrev = keyPrevPrev = undefined;
     clearInterval(clear);
     xValues.length = 0;
     yValues.length = 0;
     toggle = false;
-    typeArea.scrollTop =0;
-    
-    if(!maxWordsInitialized) maxWords=200;
-    
+    typeArea.scrollTop = 0;
+
+    if (!maxWordsInitialized) maxWords = 200;
+
 }
 
-retry.addEventListener('click',async ()=>{
-    document.addEventListener('keydown',preventKeyEvent);
-    if(modeType=='customize'&&game_wordss){
+retry.addEventListener('click', async () => {
+    document.addEventListener('keydown', preventKeyEvent);
+    if (modeType == 'customize' && game_wordss) {
         playGame(game_wordss);
-        console.log("retry coming here");
+
     }
-    else if(modeType=='quote'){
+    else if (modeType == 'quote') {
         playGame(await QuoteOption(record));
     }
     else playGame();
     retry.blur();
-    //flag= false;   
+
 })
 
-function playGame(game_words){
+function playGame(game_words) {
     resetState();
-    document.removeEventListener('keydown',preventKeyEvent);
-    if(game_wordss&&game_words&&modeType=='customize') game_words = game_wordss.map(i=>i);
-    console.log("game words",game_words)
-    if(game_words){
+    document.removeEventListener('keydown', preventKeyEvent);
+    if (game_wordss && game_words && modeType == 'customize') game_words = game_wordss.map(i => i);
+
+    if (game_words) {
         test_words = game_words;
         maxWords = test_words.length;
     }
-    else{
-        for(let i=0;i<maxWords;i++){
-           test_words.push(array[ Math.ceil(Math.random()*260)]);
+    else {
+        for (let i = 0; i < maxWords; i++) {
+            test_words.push(array[Math.ceil(Math.random() * 260)]);
         }
     }
     textchild.style.display = 'flex';
     textchild.style.flexWrap = 'wrap';
-    test_words.forEach((value)=>{
+    test_words.forEach((value) => {
         const word = document.createElement('div');
         word.classList.add("wordFlex")
         let span = "";
-        for(let i=0;i<value.length;i++){
-            
+        for (let i = 0; i < value.length; i++) {
+
             span = document.createElement('span');
             span.style.display = "block"
-            //span.style.transitionDuration= '0.4s';
+
             span.classList.add("caret");
             span.textContent = value.charAt(i);
             span.classList.add("blockPadding");
-            disp_str+=value[i];
+            disp_str += value[i];
             word.appendChild(span);
-            
+
         }
-        height = span.getBoundingClientRect().height;
-   // typeArea.style.height= (word.firstChild.getBoundingClientRect().y)*3;
-    
-    disp_str+=" ";
-    let space_span = document.createElement("span")
-    space_span.classList.add("blockPadding")
-    //space_span.classList.add("caret"); if added, underline delay
-    space_span.textContent= ' ';   
-    word.appendChild(space_span);
-    
-    
-    //we can place the margin = 1ch if the font is mono
-    textchild.appendChild(word);
-})
-
-textchild.classList.add('text');
-typeArea.appendChild(textchild);
 
 
 
+        disp_str += " ";
+        let space_span = document.createElement("span")
+        space_span.classList.add("blockPadding")
+        //space_span.classList.add("caret"); if added, underline delay
+        space_span.textContent = ' ';
+        word.appendChild(space_span);
 
-if(!handlerInitialized){
-    document.addEventListener('keydown',keyDownHandler);
-    document.addEventListener('keypress',keyPressHandler);
-    document.addEventListener('mousemove',mouseMoveHandler);
-    handlerInitialized=true;
+
+        //we can place the margin = 1ch if the font is mono
+        textchild.appendChild(word);
+    })
+
+    textchild.classList.add('text');
+    typeArea.appendChild(textchild);
+
+
+
+
+    if (!handlerInitialized) {
+        document.addEventListener('keydown', keyDownHandler);
+        document.addEventListener('keypress', keyPressHandler);
+        document.addEventListener('mousemove', mouseMoveHandler);
+        handlerInitialized = true;
+    }
+
+
 }
-console.log("playgame end")
 
-}
+function keyDownHandler(e) {
 
-function keyDownHandler(e){
-    //console.log(e.key);
-    if(tabflag && e.key=="Tab") {
+    if (tabflag && e.key == "Tab") {
         e.preventDefault();
         retry.focus();
-        tabflag=false;
+        tabflag = false;
     }
-    if(!flag && e.key!="Backspace"&&e.key!="Enter"&&e.key!="Tab"&&e.key!="Control"){
-        console.log('helloooo?/')
-        flag=true;
-        if(!maxWordsInitialized)timerStart();
-        else{
+    if (!flag && e.key != "Backspace" && e.key != "Enter" && e.key != "Tab" && e.key != "Control") {
+
+        flag = true;
+        if (!maxWordsInitialized) timerStart();
+        else {
             wordTimer();
         }
-        
+
     }
 
-    if(e.key=="Backspace"){
-        
-        if(wrong) wpm_obj.wrongCharacters--;
-        else  wpm_obj.correctCharacters--;
-        if(wpm_obj.correctCharacters<0) wpm_obj.correctCharacters=0;
-        
-        //no of characters shouldn't decrease from 0
-        //if(string_pointer>0 &&!wrong && toggle) wpm_obj.noOfCharacters--;
-        console.log("wrong ",wrong);
-        if(disp_str[string_pointer-1]==" "&&!wrong){
-            wpm_obj.wordCount-=1;
-            
-            console.log("word count going less but why")
-            //toggle = false;
+    if (e.key == "Backspace") {
+
+        if (wrong) wpm_obj.wrongCharacters--;
+        else wpm_obj.correctCharacters--;
+        if (wpm_obj.correctCharacters < 0) wpm_obj.correctCharacters = 0;
+
+
+
+        if (disp_str[string_pointer - 1] == " " && !wrong) {
+            wpm_obj.wordCount -= 1;
+
+
+
         }
-        if(wrong) wrong--;
-        if(string_pointer>0)string_pointer--;
-        console.log(toggle);
-        
-        //if(disp_str[string_pointer-1]==" "&&!wrong) toggle=true;
-        if(maxWordsInitialized&&!wrong) wordChecker();
-        
+        if (wrong) wrong--;
+        if (string_pointer > 0) string_pointer--;
+
+
+
+        if (maxWordsInitialized && !wrong) wordChecker();
+
         let cur_caret = document.querySelector(`.text div:nth-child(${hook.divhook}) span:nth-child(${hook.spanhook})`)
-        let behindCaretPointer;                                                   
-        
-        if(hook.spanhook==1){
-            if(hook.divhook==1) {
+        let behindCaretPointer;
+
+        if (hook.spanhook == 1) {
+            if (hook.divhook == 1) {
                 cur_caret.classList.remove("wrongColor,correctColor")
                 return;
             }
-            
-            //cursor back
-           // if(hook.spanhook>test_words [hook.divhook-1].length+1){
-           //     const temp =  document.querySelector(`.text div:nth-child(${hook.divhook+1}) span:nth-child(${1})`);
-           //     temp.removeAttribute('style');
-           // }
-           
-           // cur_temp.removeAttribute('style');
-            cur_caret.classList.remove("backgroundCaret","textDecorationColor","textDecoration","backgroundTextDecoration","backgroundColor","correctColor","wrongColor","wrongTextDecoration")
-            //state.curr_div.removeAttribute("style");
-            state.curr_div.classList.remove("backgroundCaret","textDecorationColor","textDecoration","backgroundColor","correctColor","wrongColor","wrongTextDecoration","backgroundColor");
-            
-            hook.divhook-=1;
-            hook.spanhook=test_words[hook.divhook-1].length+1;//-1 is for array indexing
-            console.log(hook);
-            
-            cur_caret=  document.querySelector(`.text div:nth-child(${hook.divhook}) span:nth-child(${hook.spanhook})`);
+
+
+            cur_caret.classList.remove("backgroundCaret", "textDecorationColor", "textDecoration", "backgroundTextDecoration", "backgroundColor", "correctColor", "wrongColor", "wrongTextDecoration")
+
+            state.curr_div.classList.remove("backgroundCaret", "textDecorationColor", "textDecoration", "backgroundColor", "correctColor", "wrongColor", "wrongTextDecoration", "backgroundColor");
+
+            hook.divhook -= 1;
+            hook.spanhook = test_words[hook.divhook - 1].length + 1;//-1 is for array indexing
+
+
+            cur_caret = document.querySelector(`.text div:nth-child(${hook.divhook}) span:nth-child(${hook.spanhook})`);
             state.curr_div = document.querySelector(`.text div:nth-child(${hook.divhook})`);
 
-            behindCaretPointer  = hook.spanhook-1;
+            behindCaretPointer = hook.spanhook - 1;
             state.key = document.querySelector(`.text div:nth-child(${hook.divhook}) span:nth-child(${behindCaretPointer})`);
-            console.log(state);
-            // state.curr_div.style.textDecoration= "underline";
+
+
             state.curr_div.classList.add("textDecoration")
-            
-            
-            cur_caret.classList.remove("wrongTextDecoration","wrongColor");
-                
-               
-            
-            
+
+
+            cur_caret.classList.remove("wrongTextDecoration", "wrongColor");
+
+
+
+
             cur_caret.classList.remove("backgroundTextDecoration");
             cur_caret.classList.add("textDecoration");
             cur_caret.classList.add("textDecorationColor");
             //transparent space when backspace issue fix
             cur_caret.classList.remove("backgroundColor");
-            //state.key.style.background = caretColor;
+
             cur_caret.classList.add("backgroundCaret");
 
-            
 
-            
-            
+
+
+
             let obj = (cur_caret.getBoundingClientRect());
             spanHeight = cur_caret.getBoundingClientRect().height;
             currY = obj.y;
-            
-            console.log("Spanheight ",spanHeight, ' scrolltop',typeArea.scrollTop);
-            if(prevY!=""){
-                if(prevY!=currY&&flip){
-                    number  = +(obj.height)
-                    typeArea.scrollTop -=number;
-                 
+
+
+            if (prevY != "") {
+                if (prevY != currY && flip) {
+                    number = +(obj.height)
+                    typeArea.scrollTop -= number;
+
                     obj = (cur_caret.getBoundingClientRect());
                     currY = obj.y;
-                    console.log("prevy ",prevY,"currY ",currY);
+
                 }
-                else if(prevY!=currY) flip = false;
+                else if (prevY != currY) flip = false;
             }
-            prevY=currY;
-            
-            //quick hack fix visual bug
-            //const temp =  document.querySelector(`.text div:nth-child(${hook.divhook+1})`);
-        
-           // temp.classList.remove("textDecoration");
-           
+            prevY = currY;
+
+
             return;
         }
         //cursor current key remove
-        
-       // cur_temp.removeAttribute('style');
-       //console.log("before backspace");
-       //console.log(hook);
-       //console.log(state.key.textContent)
-       // console.log(cur_caret)
-        
-        cur_caret.classList.remove("backgroundCaret","textDecorationColor","textDecoration","backgroundTextDecoration","backgroundColor","correctColor","wrongColor","wrongTextDecoration")
-        state.key.classList.remove("backgroundCaret","textDecorationColor","textDecoration","backgroundTextDecoration","backgroundColor","correctColor","wrongColor","wrongTextDecoration");
-        //state.key.removeAttribute('style');
-        hook.spanhook -=1;
-        //console.log(hook,"hook updated");
-        if(hook.spanhook-1<1&&hook.divhook!=1){
-            behindCaretPointer = test_words[hook.divhook-2].length+1
-         //   console.log(behindCaretPointer);
+
+
+
+        cur_caret.classList.remove("backgroundCaret", "textDecorationColor", "textDecoration", "backgroundTextDecoration", "backgroundColor", "correctColor", "wrongColor", "wrongTextDecoration")
+        state.key.classList.remove("backgroundCaret", "textDecorationColor", "textDecoration", "backgroundTextDecoration", "backgroundColor", "correctColor", "wrongColor", "wrongTextDecoration");
+
+        hook.spanhook -= 1;
+
+        if (hook.spanhook - 1 < 1 && hook.divhook != 1) {
+            behindCaretPointer = test_words[hook.divhook - 2].length + 1
+
         }
         else {
-            behindCaretPointer = hook.spanhook-1
+            behindCaretPointer = hook.spanhook - 1
         }
         cur_caret = document.querySelector(`.text div:nth-child(${hook.divhook}) span:nth-child(${hook.spanhook})`);
-        state.key = (hook.spanhook==1)?document.querySelector(`.text div:nth-child(${hook.divhook-1}) span:nth-child(${behindCaretPointer})`)
-                    :document.querySelector(`.text div:nth-child(${hook.divhook}) span:nth-child(${behindCaretPointer})`);
-        
-        //state.key.removeAttribute("style");
-        //console.log("after backspace");
-        //console.log(state);
-        //console.log(cur_caret);
+        state.key = (hook.spanhook == 1) ? document.querySelector(`.text div:nth-child(${hook.divhook - 1}) span:nth-child(${behindCaretPointer})`)
+            : document.querySelector(`.text div:nth-child(${hook.divhook}) span:nth-child(${behindCaretPointer})`);
+
+
 
         //cursor prev key display
-        //state.key.style.background= caretColor;
+
         cur_caret.classList.add("backgroundCaret")
         cur_caret.classList.remove("backgroundColor")
 
         //Remember spanhook is always pointing ahead, it refers then increments 
-      
-        
-       
 
-       // state.curr_div.style.textDecoration= "underline";
+
+
+
+
         state.curr_div.classList.add("textDecoration")
 
-       // state.curr_div.lastChild.style.textDecoration="underline";
+
         state.curr_div.lastChild.classList.add("textDecoration");
 
-        
-       // state.curr_div.lastChild.style.textDecorationColor=backgroundColor;
+
+
         state.curr_div.lastChild.classList.add("backgroundTextDecoration");
 
-        console.log("wrong end backspace",wrong,"\n\n"); 
+
     }
-    
-    //console.log("no of correct characters ",wpm_obj.correctCharacters)
-    console.log( "word count",wpm_obj.wordCount);
+
+
+
 }
 
-function keyPressHandler(e){
-    if(e.key=="Enter" ) return;
-    if(!headerInvisible){
+function keyPressHandler(e) {
+    if (e.key == "Enter") return;
+    if (!headerInvisible) {
         header.classList.add('invisible');
         modes.classList.add('invisible');
         headerInvisible = true;
@@ -406,48 +388,38 @@ function keyPressHandler(e){
         document.body.classList.add('noCursor');
 
     }
-    console.log("typeof ",typeof e.key, " ",e.key);
-    if(wrong>10)return
-    console.log("wrong start keypress ",wrong);
-    
-    //if(e.key!=disp_str[string_pointer]) wpm_obj.incorrectTyped+=1;
-    console.log("string pointer before ",disp_str[string_pointer])
-    if(e.key==disp_str[string_pointer]&&!wrong){
+
+    if (wrong > 10) return
+
+
+
+
+    if (e.key == disp_str[string_pointer] && !wrong) {
         string_pointer++;
         toggle = false;
-        if(disp_str[string_pointer-1]==" "&&!wrong){
-            wpm_obj.wordCount+=1;
-            toggle=true;
+        if (disp_str[string_pointer - 1] == " " && !wrong) {
+            wpm_obj.wordCount += 1;
+            toggle = true;
         }
-        if(maxWordsInitialized &&!wrong)wordChecker();
+        if (maxWordsInitialized && !wrong) wordChecker();
     }
-    else{
+    else {
         string_pointer++;
         wrong++;
-        wpm_obj.incorrectTyped+=1;
+        wpm_obj.incorrectTyped += 1;
     }
-    console.log(wpm_obj);
-    //else if(e.key!=disp_str[string_pointer]&&!wrong){
-    //    wrong++;
-    //    
-    //}
-    //else if(wrong){
-    //    wrong++;
-    //    
-    //}
-    console.log("string pointer after",disp_str[string_pointer])
-    //else wrong++;
-    if(wrong) wpm_obj.wrongCharacters++;
+
+    if (wrong) wpm_obj.wrongCharacters++;
     else wpm_obj.correctCharacters++;
-    
-    
-   // console.log("spanhook before ",hook.spanhook)
-   
+
+
+
+
     state.key = document.querySelector(`.text div:nth-child(${hook.divhook}) span:nth-child(${hook.spanhook++})`);
 
     state.curr_div = document.querySelector(`.text div:nth-child(${hook.divhook})`);
-    console.log("state.key ",state)
-    if(hook.spanhook>test_words[hook.divhook-1].length+1)//added 1 due to added space in actual span
+
+    if (hook.spanhook > test_words[hook.divhook - 1].length + 1)//added 1 due to added space in actual span
     {
         hook.spanhook = 1;
         hook.divhook++;
@@ -457,162 +429,131 @@ function keyPressHandler(e){
         state.curr_div.classList.remove("textDecoration");
         state.curr_div = document.querySelector(`.text div:nth-child(${hook.divhook})`);
     }
-    const keynext =  document.querySelector(`.text div:nth-child(${hook.divhook}) span:nth-child(${hook.spanhook})`);
+    const keynext = document.querySelector(`.text div:nth-child(${hook.divhook}) span:nth-child(${hook.spanhook})`);
     keynext.classList.add("caret")
-    //keynext.style.background=caretColor;
+
     keynext.classList.add("backgroundCaret");
-        
-    
-    //state.key.style.background =backgroundColor;
+
+
+
     state.key.classList.add("backgroundColor")
 
-    //state.curr_div.lastChild.style.textDecoration="underline";
+
     state.curr_div.lastChild.classList.add("textDecoration")
 
-    
+
     //consistent more 
     state.curr_div.lastChild.classList.remove("textDecorationColor")
-    //state.curr_div.lastChild.style.textDecorationColor=backgroundColor;
+
     state.curr_div.lastChild.classList.add("backgroundTextDecoration");
-    
-    //state.curr_div.style.textDecoration= "underline";
+
+
     state.curr_div.classList.add("textDecoration");
-    
-    if(hook.spanhook==test_words[hook.divhook-1].length+1 &&!wrong){
+
+    if (hook.spanhook == test_words[hook.divhook - 1].length + 1 && !wrong) {
         //space white line issue fix
         keynext.classList.remove('backgroundTextDecoration');
-        // keynext.style.textDecorationColor=caretColor
+
         keynext.classList.add("textDecorationColor");
     }
-    //console.log("wrong ",wrong);
-    if(hook.spanhook==1&&hook.divhook>1){
-        //state.curr_div.style.textDecoration= "none";
-       // state.curr_div.classList.remove("textDecoration")
 
-        //const temp =  document.querySelector(`.text div:nth-child(${hook.divhook})`);
-        ////temp.style.textDecoration = "underline";
-        //temp.classList.add("textDecoration");
-//
-        //
-        ////temp.lastChild.style.textDecoration = "underline";
-        //temp.lastChild.classList.add("textDecoration");
-//
-        ////temp.lastChild.style.textDecorationColor = backgroundColor;
-        //temp.lastChild.classList.add("backgroundTextDecoration")
-    }
-    if(!wrong){
-        //state.key.style.color = correctColor;
+    if (!wrong) {
+
         state.key.classList.add("correctColor");
     }
     else {
-        
-        //state.key.style.color=wrongColor;
+
+
         state.key.classList.add("wrongColor");
 
-        //state.key.style.textDecoration="underline";
+
         state.key.classList.add("textDecoration");
 
-        //state.key.style.textDecorationColor=wrongColor;
+
         state.key.classList.add("wrongTextDecoration");
-        
-        //if(hook.spanhook>test_words[hook.divhook-1].length+1){
-        //    //state.curr_div.style.textDecoration= "none";
-        //    state.curr_div.classList.add("textDecoration");
-        //    const temp =  document.querySelector(`.text div:nth-child(${hook.divhook+1})`);
-        //    //temp.style.textDecoration = "underline";
-        //    temp.classList.add("textDecoration");
-        //
-        //    //temp.lastChild.style.textDecoration = "underline";
-        //    temp.lastChild.classList.add("textDecoration");
-//
-        //    //temp.lastChild.style.textDecorationColor = backgroundColor;
-        //    temp.lastChild.classList.add("backgroundTextDecoration")
-        //    
-        //}
+
     }
-    console.log("wrong end keypress ",wrong);
-    console.log("\n\n")
-    //sliding para; hook.spanhook>test_words[hook.divhook-1].length+1
-    
-   // const temp = (hook.spanhook==1)? document.querySelector(`.text div:nth-child(${hook.divhook}) span:nth-child(${hook.spanhook})`)
-                                          //  :state.key;
+
+    //sliding para
+
+
     let obj = (keynext.getBoundingClientRect());
     currY = obj.y;
-    
-    if(prevY!=""){
-        if(prevY!=currY && flip){
-            console.log("prevy ",prevY,"currY ",currY);
-            number  = +(obj.height)
-            typeArea.scrollTop +=number;
-        
+
+    if (prevY != "") {
+        if (prevY != currY && flip) {
+
+            number = +(obj.height)
+            typeArea.scrollTop += number;
+
             obj = (keynext.getBoundingClientRect());
             currY = obj.y;
         }
-        else if(prevY!=currY) flip= true;
+        else if (prevY != currY) flip = true;
 
     }
-    prevY=currY;
-    
-    console.log("word count ",wpm_obj.wordCount);
+    prevY = currY;
+
+
 }
-function mouseMoveHandler(e){
-    if(headerInvisible){
-        headerInvisible=false;
+function mouseMoveHandler(e) {
+    if (headerInvisible) {
+        headerInvisible = false;
         header.classList.remove("invisible");
         modes.classList.remove("invisible");
         icon.classList.remove("iconVisible");
         document.body.classList.remove("noCursor");
     }
 }
-function preventKeyEvent(e){
+function preventKeyEvent(e) {
     e.preventDefault();
 }
-async function execGame(){
+async function execGame() {
     let mode = localStorage.getItem("modeType");
-    let option= {
+    let option = {
         timeOp: localStorage.getItem("timeOption"),
         wordOp: localStorage.getItem("wordOption"),
         quoteOp: localStorage.getItem("quoteOption"),
-        cMode : localStorage.getItem("cMode"),
-        cParam : localStorage.getItem("cParam"),
+        cMode: localStorage.getItem("cMode"),
+        cParam: localStorage.getItem("cParam"),
     }
-    //console.log(Boolean(option))
-    let click = new MouseEvent("click",{bubbles:true,cancelable:true});
-    if(!mode||!option){
+    
+    let click = new MouseEvent("click", { bubbles: true, cancelable: true });
+    if (!mode || !option) {
         mode = "time";
-        localStorage.setItem("modeType","time");
+        localStorage.setItem("modeType", "time");
         option.timeOp = 2;
         option.wordOp = 1;
         option.quoteOp = 1;
         option.cMode = "";
         option.cParam = "";
-        localStorage.setItem("timeOption",option.timeOp);
-        localStorage.setItem("wordOption",option.wordOp);
-        localStorage.setItem("quoteOption",option.quoteOp);
-        localStorage.setItem("cMode",option.cMode);
-        localStorage.setItem("cParam",option.cParam);
+        localStorage.setItem("timeOption", option.timeOp);
+        localStorage.setItem("wordOption", option.wordOp);
+        localStorage.setItem("quoteOption", option.quoteOp);
+        localStorage.setItem("cMode", option.cMode);
+        localStorage.setItem("cParam", option.cParam);
     }
-    
-    if(mode=="time"){
+
+    if (mode == "time") {
         localRef1 = document.querySelector(".choices>button:nth-child(1)");
-        localRef2= document.querySelector(`.button>button:nth-child(${option.timeOp})`)
+        localRef2 = document.querySelector(`.button>button:nth-child(${option.timeOp})`)
         localRef1.dispatchEvent(click);
         localRef2.dispatchEvent(click);
     }
 
-    else if(mode=="word"){
+    else if (mode == "word") {
         localRef1 = document.querySelector(".choices>button:nth-child(2)");
         localRef2 = document.querySelector(`.button>button:nth-child(${option.wordOp})`);
         localRef1.dispatchEvent(click);
         localRef2.dispatchEvent(click);
     }
-    else if(mode=="quote"){
+    else if (mode == "quote") {
         localRef1 = document.querySelector(".choices>button:nth-child(3)");
         localRef2 = document.querySelector(`.button>button:nth-child(${option.quoteOp})`);
         localRef1.dispatchEvent(click);
         localRef2.dispatchEvent(click);
     }
-    else{
+    else {
         //customize - 3 cases, preserve word/time, do default on custom para
         localRef1 = document.querySelector(".choices>button:nth-child(4)")
         localRef1.classList.add("modeSelected");
@@ -620,7 +561,7 @@ async function execGame(){
         customGame();
     }
 }
-function modalHandler(event){
-        if(!favDialog.open) return;
-        event.stopImmediatePropagation();
+function modalHandler(event) {
+    if (!favDialog.open) return;
+    event.stopImmediatePropagation();
 }
