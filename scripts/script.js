@@ -43,8 +43,8 @@ let array = str.split(" ");
 let test_words = []
 let prevY = ""
 let currY = ""
-let flip = false;
-let scrolll = true;
+
+let scrolll = 0;
 let string_pointer = 0;
 let user_str = ""
 let hook = {
@@ -114,7 +114,7 @@ function resetState() {
     test_words.length = 0
     prevY = ""
     currY = ""
-    flip = false;
+    
     scrolll = 0;
     string_pointer = 0;
     user_str = ""
@@ -315,15 +315,15 @@ function keyDownHandler(e) {
 
 
             if (prevY != "") {
-                if (prevY != currY && flip) {
+                if (prevY != currY && scrolll>=1) {
                     number = +(obj.height)
                     typeArea.scrollTop -= number;
-
+                    scrolll-=1;
                     obj = (cur_caret.getBoundingClientRect());
                     currY = obj.y;
 
                 }
-                else if (prevY != currY) flip = false;
+                
             }
             prevY = currY;
 
@@ -482,15 +482,15 @@ function keyPressHandler(e) {
     currY = obj.y;
 
     if (prevY != "") {
-        if (prevY != currY && flip) {
+        if (prevY != currY && scrolll>=1) {
 
             number = +(obj.height)
             typeArea.scrollTop += number;
-
+            scrolll+=1;
             obj = (keynext.getBoundingClientRect());
             currY = obj.y;
         }
-        else if (prevY != currY) flip = true;
+        else if (prevY != currY) scrolll+=1;
 
     }
     prevY = currY;
