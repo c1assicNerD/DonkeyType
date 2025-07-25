@@ -187,9 +187,20 @@ async function quotesMode() {
     return game_words;
 }
 function customizeMode(temp) {
-
     const radiolist = Array.from(document.querySelectorAll('.radio div:nth-child(1) input'));
     const confirm = document.querySelector('dialog button');
+    if (!radioListenerInitialized) {
+    favDialog.addEventListener("cancel",e=>{
+        let select;
+        radiolist.forEach(radio=>{
+            if(radio.checked) select = radio;
+        })
+        let chosen = select.parentElement.parentElement.querySelector(".disable");
+        if(chosen.value==""){
+            e.preventDefault();
+            return;
+        }
+    });
     confirm.addEventListener('click', e => {
         e.preventDefault();
         radiolist.forEach(radio => {
@@ -197,19 +208,20 @@ function customizeMode(temp) {
                 customizeChoice.mode = radio.value;
                 localStorage.setItem("cMode", customizeChoice.mode);
                 customizeChoice.param = radio.parentElement.parentElement.querySelector(".disable").value;
+                console.log(customizeChoice.param);
                 localStorage.setItem("cParam", customizeChoice.param)
             }
 
-            customGame();
+            
         })
-        favDialog.close();
+        favDialog.requestClose();
         document.removeEventListener('keypress', modalHandler);
         document.removeEventListener('keydown', modalHandler);
         temp.blur();
-        // resetModalState();
+        customGame();
     })
 
-    if (!radioListenerInitialized) {
+    
         radiolist.forEach(radio => {
 
             radioListenerInitialized = true;
@@ -375,6 +387,8 @@ function customizeDisable() {
         }
         else {
             disabledInput.required = true;
+            console.log(disabledInput);
+            console.log("required truee??")
         }
     }
 }
